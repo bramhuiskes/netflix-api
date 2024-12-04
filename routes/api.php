@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return response()->json(['message' => 'Test from API route']);
 });
+
+Route::post('/validateToken', [TokenController::class, 'validateToken']);
 
 //// Openbare API-routes
 //Route::post('/register', [UserController::class, 'register']);
