@@ -8,7 +8,8 @@ Route::get('/', function () {
     return response()->json(['message' => 'Test from API route']);
 });
 
-Route::post('/validateToken', [TokenController::class, 'validateToken']);
+Route::post('/validateToken', [TokenController::class, 'checkToken']);
+Route::post('/createToken', [TokenController::class, 'createToken']);
 
 //// Openbare API-routes
 //Route::post('/register', [UserController::class, 'register']);
