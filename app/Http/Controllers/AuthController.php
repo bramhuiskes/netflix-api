@@ -3,43 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\ValidateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use function Laravel\Prompts\password;
-use function PHPUnit\Framework\isInstanceOf;
 
 class AuthController extends Controller
 {
     public function login(Request $request) : JsonResponse
     {
-        $user = DB::table('users')->where('email', $request->input('email'))->first();
+
+        $validator = ValidateRequest::validateUserRequest($request);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validatedRequest = $validator->validated();
+
+        if (!key_exists('email', $validatedRequest) || !key_exists('password', $validatedRequest)) {
+            return response()->json(['error' => 'request invalid']);
+        }
+
+        $user = DB::table('users')->where('email', $validatedRequest['email'])->first();
 
         if (DB::table('users') == null)
         {
             return response()->json(['error' => 'database connection failed']);
         }
 
-        if ($request->post('email') == null)
+        if ($validatedRequest['email'] == null)
         {
             return response()->json(['error' => 'email not in header']);
         }
 
-        if ($request->post('password') == null)
+        if ($validatedRequest['password'] == null)
         {
             return response()->json(['error' => 'password not in header']);
         }
 
-        if (!$user || !Hash::check($request->post('password'), $user->password)) {
+        if (!$user || !Hash::check($validatedRequest['password'], $user->password)) {
             return response()->json(['error' => $user == null ? 'user not found' : 'invalid credentials'], 401);
         }
 
         $userObject = new User();
-        $userObject->email = $request->post('email');
-        $userObject->password = $request->post('password');
+        $userObject->email = $validatedRequest['email'];
+        $userObject->password = $validatedRequest['password'];
 
-        $token = $userObject->createToken("API Token for {$request->post('email')}")->plainTextToken;
+        $token = $userObject->createToken("API Token for {$validatedRequest['email']}")->plainTextToken;
 
         $userObject->update();
 
@@ -48,12 +60,20 @@ class AuthController extends Controller
 
     public function register(Request $request) : JsonResponse
     {
-        if ($request->post('email') == null)
+        $validator = ValidateRequest::validateUserRequest($request);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validatedRequest = $validator->validated();
+
+        if ($validatedRequest['email'] == null)
         {
             return response()->json(['error' => 'email not in header']);
         }
 
-        if ($request->post('password') == null)
+        if ($validatedRequest['password'] == null)
         {
             return response()->json(['error' => 'password not in header']);
         }
