@@ -68,6 +68,11 @@ class AuthController extends Controller
 
         $validatedRequest = $validator->validated();
 
+        if (DB::table('users') -> where('email', $validatedRequest['email']) -> exists())
+        {
+            return response()->json(['error' => 'email already exists']);
+        }
+
         if ($validatedRequest['email'] == null)
         {
             return response()->json(['error' => 'email not in header']);
