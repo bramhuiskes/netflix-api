@@ -1,16 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return response()->json(['message' => 'Test from API route']);
 });
-
-//Route::post('/validateToken', [TokenController::class, 'checkToken']);
-//Route::post('/createToken', [TokenController::class, 'createToken']);
 
 Route::post("/login", [AuthController::class, 'login']);
 Route::post("/register", [AuthController::class, 'register']);

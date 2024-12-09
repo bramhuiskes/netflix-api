@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use function Laravel\Prompts\password;
+use function PHPUnit\Framework\isInstanceOf;
 
 class AuthController extends Controller
 {
@@ -32,7 +35,13 @@ class AuthController extends Controller
             return response()->json(['error' => $user == null ? 'user not found' : 'invalid credentials'], 401);
         }
 
-        $token = $user->createToken('API Token')->plainTextToken;
+        $userObject = new User();
+        $userObject->email = $request->post('email');
+        $userObject->password = $request->post('password');
+
+        $token = $userObject->createToken("API Token for {$request->post('email')}")->plainTextToken;
+
+        $userObject->update();
 
         return response()->json(['token' => $token]);
     }
