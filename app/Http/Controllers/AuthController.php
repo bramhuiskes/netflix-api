@@ -11,10 +11,24 @@ class AuthController extends Controller
 {
     public function login(Request $request) : JsonResponse
     {
-        $user = DB::table('users')->where('email', $request->email)->first();
+        $user = DB::table('users')->where('email', $request->input('email'))->first();
 
+        if (DB::table('users') == null)
+        {
+            return response()->json(['error' => 'database connection failed']);
+        }
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if ($request->post('email') == null)
+        {
+            return response()->json(['error' => 'email not in header']);
+        }
+
+        if ($request->post('password') == null)
+        {
+            return response()->json(['error' => 'password not in header']);
+        }
+
+        if (!$user || !Hash::check($request->post('password'), $user->password)) {
             return response()->json(['error' => $user == null ? 'user not found' : 'invalid credentials'], 401);
         }
 
@@ -25,7 +39,19 @@ class AuthController extends Controller
 
     public function register(Request $request) : JsonResponse
     {
-        return response()->json("");
+        if ($request->post('email') == null)
+        {
+            return response()->json(['error' => 'email not in header']);
+        }
+
+        if ($request->post('password') == null)
+        {
+            return response()->json(['error' => 'password not in header']);
+        }
+
+        DB::table('users')->insert(['email' => $request->input('email'), 'password' => Hash::make($request->input('password')), 'created_at' => now(), 'updated_at' => now()]);
+
+        return response()->json(['msg' => 'user successfully registered', 'email' => $request->input('email')]);
     }
 
     public function logout(Request $request) : JsonResponse
