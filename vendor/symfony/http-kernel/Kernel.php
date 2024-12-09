@@ -83,6 +83,15 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
     public const END_OF_MAINTENANCE = '01/2025';
     public const END_OF_LIFE = '01/2025';
 
+    protected $middlewareGroups = [
+        'api' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+
     public function __construct(
         protected string $environment,
         protected bool $debug,
