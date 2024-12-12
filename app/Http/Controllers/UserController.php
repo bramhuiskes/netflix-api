@@ -1,24 +1,33 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\ValidateRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function getUserDetails($userEmail) : JsonResponse
     {
-        $request->validate([
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-        ]);
+        $user = UserValidatorController::checkUserWithToken(["email" => $userEmail]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        if ($user instanceof JsonResponse)
+        {
+            return $user;
+        }
 
-        return response()->json(['message' => 'Registration successful'], 201);
+        if (!($user instanceof User))
+        {
+            return response()->json(['error' => 'user not found'], 422);
+        }
+
+        return response()->json([
+            "Email" => $user->email,
+            "IsActive" => $user->is_active,
+            "CreatedAt" => $user->created_at,
+            "UpdatedAt" => $user->updated_at,
+        ]);
     }
 }
 
