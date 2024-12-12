@@ -12,10 +12,9 @@ Route::post("/login", [AuthController::class, 'login']);
 Route::post("/register", [AuthController::class, 'register']);
 Route::post("/logout", [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post("/password-reset", [AuthController::class, 'passwordReset']);
-Route::post("/password-reset/confirm", [AuthController::class, 'confirmPasswordReset']);
 
 Route::post('/activate-account', [AuthController::class, 'activateAccount']);
-Route::post('/block-account', [AuthController::class, 'blockAccount'])->middleware('auth:sanctum');
+Route::post('/block-account', [AuthController::class, 'blockAccount']);
 
 
 //// Openbare API-routes

@@ -15,4 +15,14 @@ class ValidateRequest
 
         return Validator::make($request->all(), $rules);
     }
+    static function validateUserNewPassRequest($request) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required',
+            'newPassword' => 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
 }
