@@ -136,6 +136,11 @@ class AuthController extends Controller
             return response()->json(['error' => 'user not found'], 422);
         }
 
+        if (!ValidateRequest::isTokenForUser($request, $user))
+        {
+            return response()->json(['error' => 'invalid token'], 403);
+        }
+
         if ($user->is_active == 1)
         {
             return response()->json(['msg' => 'account was already active']);
@@ -166,6 +171,11 @@ class AuthController extends Controller
         if (!($user instanceof User))
         {
             return response()->json(['error' => 'user not found'], 422);
+        }
+
+        if (!ValidateRequest::isTokenForUser($request, $user))
+        {
+            return response()->json(['error' => 'invalid token'], 403);
         }
 
         if ($user->is_blocked == 1)
