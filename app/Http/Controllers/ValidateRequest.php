@@ -1,9 +1,9 @@
 <?php
-namespace App\Models;
+namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class ValidateRequest
 {
@@ -50,5 +50,19 @@ class ValidateRequest
         }
 
         return true;
+    }
+
+    public static function validateMovieGetRequest(Request $request) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'movie_id' => 'nullable',
+            'title' => 'nullable',
+            'release_year' => 'nullable',
+            'quality_available' => 'nullable',
+            'viewer_indications' => 'nullable',
+            'genres' => 'nullable',
+        ];
+
+        return Validator::make($request->all(), $rules);
     }
 }

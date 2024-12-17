@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\ValidateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

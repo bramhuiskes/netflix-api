@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,8 @@ Route::post('/activate-account', [AuthController::class, 'activateAccount'])->mi
 Route::post('/block-account', [AuthController::class, 'blockAccount'])->middleware('auth:sanctum');
 
 Route::get('/user/{user?}', [UserController::class, 'getUserDetails'])->middleware('auth:sanctum');
+
+Route::get('/movies', [MovieController::class, 'getMovies'])->middleware('auth:sanctum');
 
 
 
