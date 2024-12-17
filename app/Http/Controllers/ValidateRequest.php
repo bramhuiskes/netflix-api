@@ -52,17 +52,27 @@ class ValidateRequest
         return true;
     }
 
-    public static function validateMovieGetRequest(Request $request) : \Illuminate\Validation\Validator
+    public static function validateMovieRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
     {
         $rules = [
             'movie_id' => 'nullable',
-            'title' => 'nullable',
-            'release_year' => 'nullable',
-            'quality_available' => 'nullable',
+            'title' => $fieldOptional ? 'nullable' : 'required',
+            'release_year' => $fieldOptional ? 'nullable' : 'required',
+            'quality_available' => $fieldOptional ? 'nullable' : 'required',
             'viewer_indications' => 'nullable',
             'genres' => 'nullable',
         ];
 
         return Validator::make($request->all(), $rules);
     }
+
+    public static function validateDeleteRequest(Request $request) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
 }
