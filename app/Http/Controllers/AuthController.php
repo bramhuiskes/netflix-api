@@ -39,6 +39,34 @@ class AuthController extends Controller
         return response()->json(['token' => $token]);
     }
 
+    public function loginWithoutPasswordCheck(Request $request) : JsonResponse
+    {
+        $validator = ValidateRequest::validateUserRequestWithoutPass($request);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = UserValidatorController::checkUserWithToken($validator->validated());
+
+        if ($user instanceof JsonResponse)
+        {
+            return $user;
+        }
+
+        if (!($user instanceof User))
+        {
+            return response()->json(['error' => 'user not found'], 422);
+        }
+
+        if ($user->is_blocked == 1)
+        {
+            return response()->json(['error' => 'user is blocked'], 403);
+        }
+
+        return response()->json(['psw' => User::where('email', $user->email)->first()["password"]]);
+    }
+
     public function register(Request $request) : JsonResponse
     {
         $validator = ValidateRequest::validateUserRequest($request);

@@ -11,6 +11,7 @@ Route::get('/', function () {
 });
 
 Route::post("/login", [AuthController::class, 'login']);
+Route::get("/login", [AuthController::class, 'loginWithoutPasswordCheck']);
 Route::post("/register", [AuthController::class, 'register']);
 Route::post("/password-reset", [AuthController::class, 'passwordReset']);
 
