@@ -58,7 +58,7 @@ class ValidateRequest
             'movie_id' => 'nullable',
             'title' => $fieldOptional ? 'nullable' : 'required',
             'release_year' => $fieldOptional ? 'nullable' : 'required',
-            'quality_available' => $fieldOptional ? 'nullable' : 'required',
+            'movie_quality_id' => 'nullable',
             'viewer_indications' => 'nullable',
             'genres' => 'nullable',
         ];
