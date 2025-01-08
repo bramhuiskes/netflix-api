@@ -29,7 +29,8 @@ class UserController extends Controller
 
         return ResponseController::respond([
             "Email" => $user->email,
-            "IsActive" => $user->is_active,
+            "AccountStatus" => $user->account_status,
+            "TrialStatus" => $user->trial_status,
             "CreatedAt" => $user->created_at,
             "UpdatedAt" => $user->updated_at,
         ]);
