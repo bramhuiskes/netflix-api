@@ -95,7 +95,7 @@ class ModelController
         return ResponseController::respond(['msg' => 'Data successfully updated']);
     }
 
-    private static function checkId(array $validatedRequest, Model $model, string $table) : ?Response
+    private static function checkId(array $validatedRequest, Model $model, string $table)
     {
         if (!isset($validatedRequest["id"]))
         {
@@ -110,7 +110,7 @@ class ModelController
         return null;
     }
 
-    private static function checkAdminRights(User $user, $isAdminRightsRequired) : ?Response
+    private static function checkAdminRights(User $user, $isAdminRightsRequired)
     {
         if ($isAdminRightsRequired && (!$user->exists() || $user->role_id != 1))
         {

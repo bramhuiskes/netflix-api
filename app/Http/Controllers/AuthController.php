@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\ResponseController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\ResponseController;
 
 class AuthController extends Controller
 {
+    public static string $table = 'users';
     public function login(Request $request)
     {
         $validator = ValidateRequest::validateUserRequest($request);
@@ -101,13 +102,14 @@ class AuthController extends Controller
 
         $user->save();
 
-        return ResponseController::respond(['msg' => 'user successfully registered', 'email' => $user->email]);
+        $token = $user->createToken("API Token for {$user->email}")->plainTextToken;
+
+        return ResponseController::respond(['token' => $token]);
     }
 
     public function logout(Request $request)
     {
 
-        return ResponseController::respond("");
     }
 
     public function passwordReset(Request $request)
@@ -169,16 +171,17 @@ class AuthController extends Controller
             return ResponseController::respond(['error' => 'invalid token'], 403);
         }
 
-        if ($user->is_active == 1)
-        {
-            return ResponseController::respond(['msg' => 'account was already active']);
-        }
+        return ModelController::patch($request->user(), ['is_active' => 1, 'id' => $user->id], $user, self::$table);
 
-        $user->is_active = 1;
-        $user->updated_at = now();
-        $user->update();
-
-        return ResponseController::respond(['msg' => 'Activate status successfully changed', 'email' => $user->email]);
+//        if ($user->is_active == 1)
+//        {
+//            return ResponseController::respond(['msg' => 'account was already active']);
+//        }
+//
+//        $user->is_active = 1;
+//        $user->update();
+//
+//        return ResponseController::respond(['msg' => 'Activate status successfully changed', 'email' => $user->email]);
     }
 
     public function blockAccount(Request $request)
@@ -206,15 +209,6 @@ class AuthController extends Controller
             return ResponseController::respond(['error' => 'invalid token'], 403);
         }
 
-        if ($user->is_blocked == 1)
-        {
-            return ResponseController::respond(['msg' => 'account was already blocked']);
-        }
-
-        $user->is_blocked = 1;
-        $user->updated_at = now();
-        $user->update();
-
-        return ResponseController::respond(['msg' => 'Block status successfully changed', 'email' => $user->email]);
+        return ModelController::patch($request->user(), ['is_blocked' => 1, 'id' => $user->id], $user, self::$table);
     }
 }
