@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Schema;
 
 class ModelController
 {
-    public static function get(array $validatedRequest, Model $model, string $table)
+    public static function get(User $user, array $validatedRequest, Model $model, string $table)
     {
+        if (!$user->exists())
+        {
+            return ResponseController::respond(["error" => "User not found"], 404);
+        }
+
         $query = $model::query();
 
         foreach ($validatedRequest as $key => $value) {
@@ -24,8 +31,12 @@ class ModelController
         return ResponseController::respond($movies);
     }
 
-    public static function post(array $validatedRequest, Model $model, string $table)
+    public static function post(User $user, array $validatedRequest, Model $model, string $table, $isAdminRightsRequired = true)
     {
+        if (self::checkAdminRights($user, $isAdminRightsRequired) != null){
+            return self::checkAdminRights($user, $isAdminRightsRequired);
+        }
+
         if ($model::where($validatedRequest)->exists())
         {
             return ResponseController::respond(['error' => "Data already exists in '{$table}'"], 422);
@@ -44,19 +55,68 @@ class ModelController
         return ResponseController::respond(['msg' => 'Successfully saved', 'model' => $model]);
     }
 
-    public static function delete(array $validatedRequest, Model $model, string $table, string $idTableName)
+    public static function delete(User $user, array $validatedRequest, Model $model, string $table, $isAdminRightsRequired = true)
     {
-        if (!isset($validatedRequest["id"])) {
+        if (self::checkAdminRights($user, $isAdminRightsRequired) != null){
+            return self::checkAdminRights($user, $isAdminRightsRequired);
+        }
+
+        if (self::checkId($validatedRequest, $model, $table) != null){
+            return self::checkId($validatedRequest, $model, $table);
+        }
+
+        $model::where('id', $validatedRequest['id'])->delete();
+
+        return ResponseController::respond(['msg' => 'Successfully deleted']);
+    }
+
+    public static function patch(User $user, array $validatedRequest, Model $model, string $table, $isAdminRightsRequired = true)
+    {
+        if (self::checkAdminRights($user, $isAdminRightsRequired) != null){
+            return self::checkAdminRights($user, $isAdminRightsRequired);
+        }
+
+        if (self::checkId($validatedRequest, $model, $table) != null){
+            return self::checkId($validatedRequest, $model, $table);
+        }
+
+        if (!isset($validatedRequest["id"]))
+        {
             return ResponseController::respond(['error' => "Parameter 'id' is required"], 422);
         }
 
-        if (!$model::where($idTableName, $validatedRequest['id'])->exists())
+        if (!$model::where('id', $validatedRequest['id'])->exists())
         {
             return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 422);
         }
 
-        $model::where($idTableName, $validatedRequest['id'])->delete();
+        $model::where('id', $validatedRequest['id'])->update($validatedRequest);
 
-        return ResponseController::respond(['msg' => 'Successfully deleted']);
+        return ResponseController::respond(['msg' => 'Data successfully updated']);
+    }
+
+    private static function checkId(array $validatedRequest, Model $model, string $table) : ?Response
+    {
+        if (!isset($validatedRequest["id"]))
+        {
+            return ResponseController::respond(['error' => "Parameter 'id' is required"], 422);
+        }
+
+        if (!$model::where('id', $validatedRequest['id'])->exists())
+        {
+            return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 422);
+        }
+
+        return null;
+    }
+
+    private static function checkAdminRights(User $user, $isAdminRightsRequired) : ?Response
+    {
+        if ($isAdminRightsRequired && (!$user->exists() || $user->role_id != 1))
+        {
+            return ResponseController::respond(['error' => "Unauthorized"], 401);
+        }
+
+        return null;
     }
 }

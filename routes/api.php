@@ -23,6 +23,7 @@ Route::get('/user/{user?}', [UserController::class, 'getUserDetails'])->middlewa
 Route::get('/movies', [MovieController::class, 'getMovies'])->middleware('auth:sanctum');
 Route::post('/movies', [MovieController::class, 'addMovie'])->middleware('auth:sanctum');
 Route::delete('/movies', [MovieController::class, 'deleteMovie'])->middleware('auth:sanctum');
+Route::patch('/movies', [MovieController::class, 'updateMovie'])->middleware('auth:sanctum');
 
 
 //// Openbare API-routes

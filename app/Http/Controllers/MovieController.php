@@ -28,7 +28,7 @@ class MovieController extends Controller
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::post($validate->validated(), new Movie(), MovieController::$table);
+        return ModelController::post($request->user(), $validate->validated(), new Movie(), MovieController::$table);
     }
 
     public static function deleteMovie(Request $request)
@@ -39,8 +39,17 @@ class MovieController extends Controller
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::delete($validate->validated(), new Movie(), MovieController::$table, 'movie_id');
+        return ModelController::delete($request->user(), $validate->validated(), new Movie(), MovieController::$table);
     }
 
+    public static function updateMovie(Request $request)
+    {
+        $validate = ValidateRequest::validateMovieRequest($request);
 
+        if ($validate->fails()) {
+            return ResponseController::respond(['errors' => $validate->errors()], 422);
+        }
+
+        return ModelController::patch($request->user(), $validate->validated(), new Movie(), MovieController::$table);
+    }
 }

@@ -74,5 +74,4 @@ class ValidateRequest
 
         return Validator::make($request->all(), $rules);
     }
-
 }
