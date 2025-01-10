@@ -13,106 +13,146 @@ class AuthController extends Controller
     public static string $table = 'users';
     public function login(Request $request)
     {
-        $validator = ValidateRequest::validateUserRequest($request);
-
-        if ($validator->fails()) {
-            return ResponseController::respond(['errors' => $validator->errors()], 422);
+        $validatorOutput = self::validateUserRequest($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
         }
 
-        $user = UserValidatorController::checkUserWithoutToken($validator->validated());
-
-        if ($user instanceof Response)
-        {
-            return $user;
+        $checkUserOutput = self::checkUser($validatorOutput, false);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
         }
 
-        if (!($user instanceof User))
-        {
-            return ResponseController::respond(['error' => 'user not found'], 422);
-        }
-
-        if ($user->is_blocked == 1)
-        {
-            return ResponseController::respond(['error' => 'user is blocked'], 403);
-        }
-
-        $token = $user->createToken("API Token for {$user->email}")->plainTextToken;
+        $token = $checkUserOutput->createToken("API Token for {$checkUserOutput->email}")->plainTextToken;
 
         return ResponseController::respond(['token' => $token]);
     }
 
     public function loginWithoutPasswordCheck(Request $request)
     {
-        $validator = ValidateRequest::validateUserRequestWithoutPass($request);
-
-        if ($validator->fails()) {
-            return ResponseController::respond(['errors' => $validator->errors()], 422);
+        $validatorOutput = self::validateUserRequestWithoutPass($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
         }
 
-        $user = UserValidatorController::checkUserWithToken($validator->validated());
-
-        if ($user instanceof Response)
-        {
-            return $user;
+        $checkUserOutput = self::checkUser($validatorOutput);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
         }
 
-        if (!($user instanceof User))
-        {
-            return ResponseController::respond(['error' => 'user not found'], 422);
-        }
-
-        if ($user->is_blocked == 1)
-        {
-            return ResponseController::respond(['error' => 'user is blocked'], 403);
-        }
-
-        return ResponseController::respond(['psw' => User::where('email', $user->email)->first()["password"]]);
+        return ResponseController::respond(['psw' => User::where('email', $checkUserOutput->email)->first()["password"]]);
     }
 
     public function register(Request $request)
     {
-        $validator = ValidateRequest::validateUserRequest($request);
-
-        if ($validator->fails()) {
-            return ResponseController::respond(['errors' => $validator->errors()], 422);
+        $validatorOutput = self::validateUserRequest($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
         }
 
-        $validatedRequest = $validator->validated();
+        $validatedRequest = $validatorOutput->validated();
 
-        if (User::where('email', $validatedRequest['email'])->exists())
-        {
+        if (User::where('email', $validatedRequest['email'])->exists()) {
             return ResponseController::respond(['error' => 'email already exists']);
         }
 
-        if ($validatedRequest['email'] == null)
-        {
+        if ($validatedRequest['email'] == null) {
             return ResponseController::respond(['error' => 'email not in header']);
         }
 
-        if ($validatedRequest['password'] == null)
-        {
+        if ($validatedRequest['password'] == null) {
             return ResponseController::respond(['error' => 'password not in header']);
         }
 
-        $user = new User();
-        $user->email = $validatedRequest['email'];
-        $user->password = Hash::make($validatedRequest['password']);
-        $user->created_at = now();
-        $user->updated_at = now();
-
+        $user = User::create([
+            "email"=> $validatedRequest['email'],
+            "password" => Hash::make($validatedRequest['password'])
+        ]);
         $user->save();
-
         $token = $user->createToken("API Token for {$user->email}")->plainTextToken;
-
         return ResponseController::respond(['token' => $token]);
     }
 
-    public function logout(Request $request)
+    public function passwordReset(Request $request)
     {
+        $validatorOutput = self::validateUserRequestNewPass($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
+        }
 
+        $validatedRequest = $validatorOutput->validated();
+
+        $checkUserOutput = self::checkUser($validatorOutput, false);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
+        }
+
+        $checkUserOutput->password = Hash::make($validatedRequest['newPassword']);
+        $checkUserOutput->update();
+
+        return ResponseController::respond(['msg' => 'password successfully changed']);
     }
 
-    public function passwordReset(Request $request)
+    public function activateAccount(Request $request)
+    {
+        $validatorOutput = self::validateUserRequestWithoutPass($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
+        }
+
+        $checkUserOutput = self::checkUser($validatorOutput);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
+        }
+
+        if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
+        {
+            return ResponseController::respond(['error' => 'invalid token'], 403);
+        }
+
+        return ModelController::patch($request->user(), ['is_active' => 1, 'account_status' => 'Active', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table, false);
+    }
+
+    public function blockAccount(Request $request)
+    {
+        $validatorOutput = self::validateUserRequestWithoutPass($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
+        }
+
+        $checkUserOutput = self::checkUser($validatorOutput, true, false);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
+        }
+
+        if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
+        {
+            return ResponseController::respond(['error' => 'invalid token'], 403);
+        }
+
+        return ModelController::patch($request->user(), ['is_blocked' => 1, 'account_status' => 'Blocked', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table, false);
+    }
+
+    public function unblockAccount(Request $request)
+    {
+        $validatorOutput = self::validateUserRequestWithoutPass($request);
+        if (!$validatorOutput instanceof \Illuminate\Validation\Validator) {
+            return $validatorOutput;
+        }
+
+        $checkUserOutput = self::checkUser($validatorOutput, true, false);
+        if (!$checkUserOutput instanceof User) {
+            return $checkUserOutput;
+        }
+
+        if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
+        {
+            return ResponseController::respond(['error' => 'invalid token'], 403);
+        }
+
+        return ModelController::patch($request->user(), ['is_blocked' => 0, 'account_status' => 'Active', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table);
+    }
+    private function validateUserRequestNewPass(Request $request)
     {
         $validator = ValidateRequest::validateUserNewPassRequest($request);
 
@@ -120,33 +160,21 @@ class AuthController extends Controller
             return ResponseController::respond(['errors' => $validator->errors()], 422);
         }
 
-        $validatedRequest = $validator->validated();
-
-        $user = UserValidatorController::checkUserWithoutToken($validatedRequest);
-
-        if ($user instanceof Response)
-        {
-            return $user;
-        }
-
-        if (!($user instanceof User))
-        {
-            return ResponseController::respond(['error' => 'user not found'], 422);
-        }
-
-        if ($validatedRequest['newPassword'] == null)
-        {
-            return ResponseController::respond(['error' => 'new password not in header'], 422);
-        }
-
-        $user->password = Hash::make($validatedRequest['newPassword']);
-        $user->updated_at = now();
-        $user->update();
-
-        return ResponseController::respond(['msg' => 'password successfully changed', 'email' => $request->input('email')]);
+        return $validator;
     }
 
-    public function activateAccount(Request $request)
+    private function validateUserRequest(Request $request)
+    {
+        $validator = ValidateRequest::validateUserRequest($request);
+
+        if ($validator->fails()) {
+            return ResponseController::respond(['errors' => $validator->errors()], 422);
+        }
+
+        return $validator;
+    }
+
+    private function validateUserRequestWithoutPass(Request $request)
     {
         $validator = ValidateRequest::validateUserRequestWithoutPass($request);
 
@@ -154,61 +182,31 @@ class AuthController extends Controller
             return ResponseController::respond(['errors' => $validator->errors()], 422);
         }
 
-        $user = UserValidatorController::checkUserWithToken($validator->validated());
-
-        if ($user instanceof Response)
-        {
-            return $user;
-        }
-
-        if (!($user instanceof User))
-        {
-            return ResponseController::respond(['error' => 'user not found'], 422);
-        }
-
-        if (!ValidateRequest::isTokenForUser($request, $user))
-        {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
-        }
-
-        return ModelController::patch($request->user(), ['is_active' => 1, 'id' => $user->id], $user, self::$table);
-
-//        if ($user->is_active == 1)
-//        {
-//            return ResponseController::respond(['msg' => 'account was already active']);
-//        }
-//
-//        $user->is_active = 1;
-//        $user->update();
-//
-//        return ResponseController::respond(['msg' => 'Activate status successfully changed', 'email' => $user->email]);
+        return $validator;
     }
 
-    public function blockAccount(Request $request)
+    private function checkUser($validator, bool $usingToken = true, bool $usingBlockStateCheck = true)
     {
-        $validator = ValidateRequest::validateUserRequestWithoutPass($request);
-
-        if ($validator->fails()) {
-            return ResponseController::respond(['errors' => $validator->errors()], 422);
+        if ($usingToken) {
+            $userOutput = UserValidatorController::checkUserWithToken($validator->validated());
+        } else {
+            $userOutput = UserValidatorController::checkUserWithoutToken($validator->validated());
         }
 
-        $user = UserValidatorController::checkUserWithToken($validator->validated());
-
-        if ($user instanceof Response)
-        {
-            return $user;
+        if ($userOutput instanceof Response) {
+            return $userOutput;
         }
 
-        if (!($user instanceof User))
-        {
+        if (!($userOutput instanceof User)) {
             return ResponseController::respond(['error' => 'user not found'], 422);
         }
 
-        if (!ValidateRequest::isTokenForUser($request, $user))
-        {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
+        if ($usingBlockStateCheck) {
+            if ($userOutput->is_blocked == 1) {
+                return ResponseController::respond(['error' => 'user is blocked'], 403);
+            }
         }
 
-        return ModelController::patch($request->user(), ['is_blocked' => 1, 'id' => $user->id], $user, self::$table);
+        return $userOutput;
     }
 }

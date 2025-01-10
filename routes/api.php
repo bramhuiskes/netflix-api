@@ -17,6 +17,7 @@ Route::post("/password-reset", [AuthController::class, 'passwordReset']);
 
 Route::post('/activate-account', [AuthController::class, 'activateAccount'])->middleware('auth:sanctum');
 Route::post('/block-account', [AuthController::class, 'blockAccount'])->middleware('auth:sanctum');
+Route::post('/unblock-account', [AuthController::class, 'unblockAccount'])->middleware('auth:sanctum');
 
 Route::get('/user/{user?}', [UserController::class, 'getUserDetails'])->middleware('auth:sanctum');
 
