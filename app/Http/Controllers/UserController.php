@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class UserController extends Controller
+class UserController
 {
     public function getUserDetails(Request $request, $userEmail)
     {

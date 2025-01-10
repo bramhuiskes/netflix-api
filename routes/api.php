@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SerieController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,10 +22,15 @@ Route::post('/unblock-account', [AuthController::class, 'unblockAccount'])->midd
 
 Route::get('/user/{user?}', [UserController::class, 'getUserDetails'])->middleware('auth:sanctum');
 
-Route::get('/movies', [MovieController::class, 'getMovies'])->middleware('auth:sanctum');
-Route::post('/movies', [MovieController::class, 'addMovie'])->middleware('auth:sanctum');
-Route::delete('/movies', [MovieController::class, 'deleteMovie'])->middleware('auth:sanctum');
-Route::patch('/movies', [MovieController::class, 'updateMovie'])->middleware('auth:sanctum');
+Route::get('/movies', [MovieController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/movies', [MovieController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/movies', [MovieController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/movies', [MovieController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/serie', [SerieController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/serie', [SerieController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/serie', [SerieController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/serie', [SerieController::class, 'update'])->middleware('auth:sanctum');
 
 
 //// Openbare API-routes

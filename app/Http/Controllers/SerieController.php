@@ -3,32 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
+use App\Models\Serie;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
 
-class MovieController extends Controller
+class SerieController extends Controller
 {
-    public static string $table = 'movies';
+    public static string $table = 'series';
+
     public function get(Request $request)
     {
-        $validate = ValidateRequest::validateMovieRequest($request);
+        $validate = ValidateRequest::validateSerieRequest($request);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::get($request->user(), $validate->validated(), new Movie(), self::$table);
+        return ModelController::get($request->user(), $validate->validated(), new Serie(), self::$table);
     }
 
     public function add(Request $request)
     {
-        $validate = ValidateRequest::validateMovieRequest($request, false);
+        $validate = ValidateRequest::validateSerieRequest($request, false);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::post($request->user(), $validate->validated(), new Movie(), self::$table);
+        return ModelController::post($request->user(), $validate->validated(), new Serie(), self::$table, );
     }
 
     public function delete(Request $request)
@@ -39,12 +40,12 @@ class MovieController extends Controller
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::delete($request->user(), $validate->validated(), new Movie(), self::$table);
+        return ModelController::delete($request->user(), $validate->validated(), new Serie(), self::$table);
     }
 
     public function update(Request $request)
     {
-        $validate = ValidateRequest::validateMovieRequest($request);
+        $validate = ValidateRequest::validateSerieRequest($request);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);

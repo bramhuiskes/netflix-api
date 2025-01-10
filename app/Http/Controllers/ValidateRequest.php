@@ -55,10 +55,24 @@ class ValidateRequest
     public static function validateMovieRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
     {
         $rules = [
-            'movie_id' => 'nullable',
+            'id' => 'nullable',
             'title' => $fieldOptional ? 'nullable' : 'required',
             'release_year' => $fieldOptional ? 'nullable' : 'required',
             'movie_quality_id' => 'nullable',
+            'viewer_indications' => 'nullable',
+            'genres' => 'nullable',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateSerieRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'title' => $fieldOptional ? 'nullable' : 'required',
+            'release_year' => $fieldOptional ? 'nullable' : 'required',
+            'quality_id' => 'nullable',
             'viewer_indications' => 'nullable',
             'genres' => 'nullable',
         ];

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\XmlTransformer;
 
-class ResponseController extends Controller
+class ResponseController
 {
    static function respond($data, $status = 200)
    {
