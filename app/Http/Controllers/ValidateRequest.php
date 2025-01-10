@@ -80,6 +80,32 @@ class ValidateRequest
         return Validator::make($request->all(), $rules);
     }
 
+    public static function validateViewHistoryRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'profile_id' => $fieldOptional ? 'nullable' : 'required',
+            'content_id' => $fieldOptional ? 'nullable' : 'required',
+            'content_type' => $fieldOptional ? 'nullable' : 'required',
+            'watch_date' => $fieldOptional ? 'nullable' : 'required',
+            'watch_duration' => $fieldOptional ? 'nullable' : 'required',
+            'complete_status' => $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateWatchlistRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'profile_id' => $fieldOptional ? 'nullable' : 'required',
+            'content_id' => $fieldOptional ? 'nullable' : 'required',
+            'content_type' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
     public static function validateDeleteRequest(Request $request) : \Illuminate\Validation\Validator
     {
         $rules = [

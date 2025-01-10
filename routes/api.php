@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\SerieController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ViewHistoryController;
+use App\Http\Controllers\WatchlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,16 +34,13 @@ Route::post('/serie', [SerieController::class, 'add'])->middleware('auth:sanctum
 Route::delete('/serie', [SerieController::class, 'delete'])->middleware('auth:sanctum');
 Route::patch('/serie', [SerieController::class, 'update'])->middleware('auth:sanctum');
 
+Route::get('/view_history', [ViewHistoryController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/view_history', [ViewHistoryController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/view_history', [ViewHistoryController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/view_history', [ViewHistoryController::class, 'update'])->middleware('auth:sanctum');
 
-//// Openbare API-routes
-//Route::post('/register', [UserController::class, 'register']);
-//Route::post('/login', [UserController::class, 'login']);
-//
-//// Beschermde API-routes (alleen toegankelijk na authenticatie)
-//Route::middleware('auth:sanctum')->group(function () {
-//    Route::get('/user', function (Request $request) {
-//        return $request->user();
-//    });
-//
-//    Route::get('/movies', [MovieController::class, 'index']);
-//});
+Route::get('/watchlist', [WatchlistController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/watchlist', [WatchlistController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/watchlist', [WatchlistController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/watchlist', [WatchlistController::class, 'update'])->middleware('auth:sanctum');
+
