@@ -106,6 +106,71 @@ class ValidateRequest
 
         return Validator::make($request->all(), $rules);
     }
+
+    public static function validateProfileRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'user_id' => $fieldOptional ? 'nullable' : 'required',
+            'name' => $fieldOptional ? 'nullable' : 'required',
+            'profile_picture' =>  'nullable',
+            'age' => $fieldOptional ? 'nullable' : 'required',
+            'language' => 'nullable',
+            'preference_id' => 'nullable',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateSubscriptionRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'user_id' => $fieldOptional ? 'nullable' : 'required',
+            'subscription_type_id' => $fieldOptional ? 'nullable' : 'required',
+            'price' =>  $fieldOptional ? 'nullable' : 'required',
+            'billing_date' => $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateSubscriptionTypeRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'name' => $fieldOptional ? 'nullable' : 'required',
+            'price' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateReferralRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'referrer_user_id' => $fieldOptional ? 'nullable' : 'required',
+            'referred_user_id' =>  $fieldOptional ? 'nullable' : 'required',
+            'discount_amount' =>  $fieldOptional ? 'nullable' : 'required',
+            'status' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validatePreferenceRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'profile_id' => $fieldOptional ? 'nullable' : 'required',
+            'key' =>  $fieldOptional ? 'nullable' : 'required',
+            'value' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
     public static function validateDeleteRequest(Request $request) : \Illuminate\Validation\Validator
     {
         $rules = [

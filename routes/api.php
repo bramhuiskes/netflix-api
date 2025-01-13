@@ -2,7 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PreferenceController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\SerieController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionTypeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ViewHistoryController;
 use App\Http\Controllers\WatchlistController;
@@ -44,3 +49,27 @@ Route::post('/watchlist', [WatchlistController::class, 'add'])->middleware('auth
 Route::delete('/watchlist', [WatchlistController::class, 'delete'])->middleware('auth:sanctum');
 Route::patch('/watchlist', [WatchlistController::class, 'update'])->middleware('auth:sanctum');
 
+Route::get('/profile', [ProfileController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/profile', [ProfileController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/profile', [ProfileController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/profile', [ProfileController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/subscription', [SubscriptionController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/subscription', [SubscriptionController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/subscription', [SubscriptionController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/subscription', [SubscriptionController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/subscription_type', [SubscriptionTypeController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/subscription_type', [SubscriptionTypeController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/subscription_type', [SubscriptionTypeController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/subscription_type', [SubscriptionTypeController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/referral', [ReferralController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/referral', [ReferralController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/referral', [ReferralController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/referral', [ReferralController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/preferences', [PreferenceController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/preferences', [PreferenceController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/preferences', [PreferenceController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/preferences', [PreferenceController::class, 'update'])->middleware('auth:sanctum');
