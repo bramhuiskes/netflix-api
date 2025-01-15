@@ -2,33 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie_quality;
-use App\Models\Preference;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class MovieQualityController extends Controller
+class RoleController extends Controller
 {
-    public static string $table = 'movie_qualities';
+    public static string $table = 'roles';
     public function get(Request $request)
     {
-        $validate = ValidateRequest::validateMovieQualityRequest($request);
+        $validate = ValidateRequest::validateRoleRequest($request);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::get($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+        return ModelController::get($request->user(), $validate->validated(), new Role(), self::$table);
     }
 
     public function add(Request $request)
     {
-        $validate = ValidateRequest::validateMovieQualityRequest($request, false);
+        $validate = ValidateRequest::validateRoleRequest($request, false);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::post($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+        return ModelController::post($request->user(), $validate->validated(), new Role(), self::$table);
     }
 
     public function delete(Request $request)
@@ -39,17 +38,17 @@ class MovieQualityController extends Controller
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::delete($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+        return ModelController::delete($request->user(), $validate->validated(), new Role(), self::$table);
     }
 
     public function update(Request $request)
     {
-        $validate = ValidateRequest::validateMovieQualityRequest($request);
+        $validate = ValidateRequest::validateRoleRequest($request);
 
         if ($validate->fails()) {
             return ResponseController::respond(['errors' => $validate->errors()], 422);
         }
 
-        return ModelController::patch($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+        return ModelController::patch($request->user(), $validate->validated(), new Role(), self::$table);
     }
 }

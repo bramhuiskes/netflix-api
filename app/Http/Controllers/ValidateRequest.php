@@ -207,6 +207,26 @@ class ValidateRequest
         return Validator::make($request->all(), $rules);
     }
 
+    public static function validateQualityTypeRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'name' => $fieldOptional ? 'nullable' : 'required',
+            'resolution' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateRoleRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'name' => $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
     public static function validateDeleteRequest(Request $request) : \Illuminate\Validation\Validator
     {
         $rules = [
