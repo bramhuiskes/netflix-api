@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\MovieQualityController;
 use App\Http\Controllers\PreferenceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReferralController;
@@ -73,3 +75,13 @@ Route::get('/preferences', [PreferenceController::class, 'get'])->middleware('au
 Route::post('/preferences', [PreferenceController::class, 'add'])->middleware('auth:sanctum');
 Route::delete('/preferences', [PreferenceController::class, 'delete'])->middleware('auth:sanctum');
 Route::patch('/preferences', [PreferenceController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/episode', [EpisodeController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/episode', [EpisodeController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/episode', [EpisodeController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/episode', [EpisodeController::class, 'update'])->middleware('auth:sanctum');
+
+Route::get('/movie_quality', [MovieQualityController::class, 'get'])->middleware('auth:sanctum');
+Route::post('/movie_quality', [MovieQualityController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/movie_quality', [MovieQualityController::class, 'delete'])->middleware('auth:sanctum');
+Route::patch('/movie_quality', [MovieQualityController::class, 'update'])->middleware('auth:sanctum');

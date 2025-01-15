@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Movie_quality;
+use App\Models\Preference;
+use Illuminate\Http\Request;
+
+class MovieQualityController extends Controller
+{
+    public static string $table = 'movie_quality';
+    public function get(Request $request)
+    {
+        $validate = ValidateRequest::validateMovieQualityRequest($request);
+
+        if ($validate->fails()) {
+            return ResponseController::respond(['errors' => $validate->errors()], 422);
+        }
+
+        return ModelController::get($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+    }
+
+    public function add(Request $request)
+    {
+        $validate = ValidateRequest::validateMovieQualityRequest($request, false);
+
+        if ($validate->fails()) {
+            return ResponseController::respond(['errors' => $validate->errors()], 422);
+        }
+
+        return ModelController::post($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+    }
+
+    public function delete(Request $request)
+    {
+        $validate = ValidateRequest::validateDeleteRequest($request);
+
+        if ($validate->fails()) {
+            return ResponseController::respond(['errors' => $validate->errors()], 422);
+        }
+
+        return ModelController::delete($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+    }
+
+    public function update(Request $request)
+    {
+        $validate = ValidateRequest::validateMovieQualityRequest($request);
+
+        if ($validate->fails()) {
+            return ResponseController::respond(['errors' => $validate->errors()], 422);
+        }
+
+        return ModelController::patch($request->user(), $validate->validated(), new Movie_quality(), self::$table);
+    }
+}

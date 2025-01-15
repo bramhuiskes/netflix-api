@@ -171,6 +171,42 @@ class ValidateRequest
         return Validator::make($request->all(), $rules);
     }
 
+    public static function validateEpisodeRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'series_id' => $fieldOptional ? 'nullable' : 'required',
+            'episodes_number' =>  $fieldOptional ? 'nullable' : 'required',
+            'title' =>  $fieldOptional ? 'nullable' : 'required',
+            'duration' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateMovieQualityRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'movie_id' => $fieldOptional ? 'nullable' : 'required',
+            'quality_type_id' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    public static function validateSubtitleRequest(Request $request, bool $fieldOptional = true) : \Illuminate\Validation\Validator
+    {
+        $rules = [
+            'id' => 'nullable',
+            'content_id' => $fieldOptional ? 'nullable' : 'required',
+            'content_type' =>  $fieldOptional ? 'nullable' : 'required',
+            'language' =>  $fieldOptional ? 'nullable' : 'required',
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
     public static function validateDeleteRequest(Request $request) : \Illuminate\Validation\Validator
     {
         $rules = [
