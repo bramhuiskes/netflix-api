@@ -27,6 +27,20 @@
  - **Delete all current tables**:
    - Warning! Be sure that the checkbox named 'Check for external key fields' is turned off!
  - **Importeer the file named** `netflix_def.sql`
+### Isolation Levels
+The following use cases have been added for isolation levels:
+- SERIALIZABLE for routes where data integrity is crucial, such as adding movies or users.
+```sql
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+```
+- REPEATABLE READ t`o retrieve user or movie information so that your data remains consistent throughout a transaction.
+```sql
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+```
+- READ COMMITTED for routes where performance is more important than perfectly consistent reads, such as retrieving all the movies.
+```sql
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+```
 ---
 ## Authentication Routes
 
