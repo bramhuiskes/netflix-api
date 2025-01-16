@@ -14,7 +14,7 @@ class WatchlistController extends Controller
         $validate = ValidateRequest::validateWatchlistRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
         return ModelController::get($request->user(), $validate->validated(), new Watchlist(), self::$table);
@@ -25,10 +25,10 @@ class WatchlistController extends Controller
         $validate = ValidateRequest::validateWatchlistRequest($request, false);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::post($request->user(), $validate->validated(), new Watchlist(), self::$table, );
+        return ModelController::post($request->user(), $validate->validated(), new Watchlist(), self::$table, false);
     }
 
     public function delete(Request $request)
@@ -36,10 +36,10 @@ class WatchlistController extends Controller
         $validate = ValidateRequest::validateDeleteRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::delete($request->user(), $validate->validated(), new Watchlist(), self::$table);
+        return ModelController::delete($request->user(), $validate->validated(), new Watchlist(), self::$table, false);
     }
 
     public function update(Request $request)
@@ -47,9 +47,9 @@ class WatchlistController extends Controller
         $validate = ValidateRequest::validateWatchlistRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::patch($request->user(), $validate->validated(), new Watchlist(), self::$table);
+        return ModelController::patch($request->user(), $validate->validated(), new Watchlist(), self::$table, false);
     }
 }

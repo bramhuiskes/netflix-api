@@ -13,7 +13,7 @@ class PreferenceController extends Controller
         $validate = ValidateRequest::validatePreferenceRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
         return ModelController::get($request->user(), $validate->validated(), new Preference(), self::$table);
@@ -24,10 +24,10 @@ class PreferenceController extends Controller
         $validate = ValidateRequest::validatePreferenceRequest($request, false);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::post($request->user(), $validate->validated(), new Preference(), self::$table);
+        return ModelController::post($request->user(), $validate->validated(), new Preference(), self::$table, false);
     }
 
     public function delete(Request $request)
@@ -35,10 +35,10 @@ class PreferenceController extends Controller
         $validate = ValidateRequest::validateDeleteRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::delete($request->user(), $validate->validated(), new Preference(), self::$table);
+        return ModelController::delete($request->user(), $validate->validated(), new Preference(), self::$table, false);
     }
 
     public function update(Request $request)
@@ -46,9 +46,9 @@ class PreferenceController extends Controller
         $validate = ValidateRequest::validatePreferenceRequest($request);
 
         if ($validate->fails()) {
-            return ResponseController::respond(['errors' => $validate->errors()], 422);
+            return ResponseController::respond(['errors' => $validate->errors()], 400);
         }
 
-        return ModelController::patch($request->user(), $validate->validated(), new Preference(), self::$table);
+        return ModelController::patch($request->user(), $validate->validated(), new Preference(), self::$table, false);
     }
 }

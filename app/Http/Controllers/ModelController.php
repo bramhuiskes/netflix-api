@@ -20,7 +20,7 @@ class ModelController
 
         foreach ($validatedRequest as $key => $value) {
             if (!Schema::hasColumn($table, $key)) {
-                return ResponseController::respond(['error' => "Parameter '{$key}' isn't valid with table '{$table}'"], 422);
+                return ResponseController::respond(['error' => "Parameter '{$key}' isn't valid with table '{$table}'"], 400);
             }
 
             $query->where($key, 'like', "%{$value}%");
@@ -39,12 +39,12 @@ class ModelController
 
         if ($model::where($validatedRequest)->exists())
         {
-            return ResponseController::respond(['error' => "Data already exists in '{$table}'"], 422);
+            return ResponseController::respond(['error' => "Data already exists in '{$table}'"], 400);
         }
 
         foreach ($validatedRequest as $key => $value) {
             if (!Schema::hasColumn($table, $key)) {
-                return ResponseController::respond(['error' => "Parameter '{$key}' isn't valid with table '{$table}'"], 422);
+                return ResponseController::respond(['error' => "Parameter '{$key}' isn't valid with table '{$table}'"], 400);
             }
 
             $model->$key = $value;
@@ -82,12 +82,12 @@ class ModelController
 
         if (!isset($validatedRequest["id"]))
         {
-            return ResponseController::respond(['error' => "Parameter 'id' is required"], 422);
+            return ResponseController::respond(['error' => "Parameter 'id' is required"], 400);
         }
 
         if (!$model::where('id', $validatedRequest['id'])->exists())
         {
-            return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 422);
+            return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 404);
         }
 
         $model::where('id', $validatedRequest['id'])->update($validatedRequest);
@@ -99,12 +99,12 @@ class ModelController
     {
         if (!isset($validatedRequest["id"]))
         {
-            return ResponseController::respond(['error' => "Parameter 'id' is required"], 422);
+            return ResponseController::respond(['error' => "Parameter 'id' is required"], 400);
         }
 
         if (!$model::where('id', $validatedRequest['id'])->exists())
         {
-            return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 422);
+            return ResponseController::respond(['error' => "No data available where id={$validatedRequest['id']} in '{$table}'"], 404);
         }
 
         return null;

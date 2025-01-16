@@ -10,7 +10,7 @@ class UserValidatorController
     public static function checkUserWithoutToken(array $validatedRequest) : object
     {
         if ($validatedRequest['email'] == null) {
-            return ResponseController::respond(['error' => 'email not in header'], 422);
+            return ResponseController::respond(['error' => 'email not in header'], 400);
         }
 
         $user = User::where('email', $validatedRequest['email'])->first();
@@ -20,7 +20,7 @@ class UserValidatorController
         }
 
         if ($validatedRequest['password'] == null) {
-            return ResponseController::respond(['error' => 'password not in header'], 422);
+            return ResponseController::respond(['error' => 'password not in header'], 400);
         }
 
         if (!Hash::check($validatedRequest['password'], $user->password)) {
@@ -33,7 +33,7 @@ class UserValidatorController
     public static function checkUserWithToken(array $validatedRequest) : object
     {
         if ($validatedRequest['email'] == null) {
-            return ResponseController::respond(['error' => 'email not in header'], 422);
+            return ResponseController::respond(['error' => 'email not in header'], 400);
         }
 
         $user = User::where('email', $validatedRequest['email'])->first();

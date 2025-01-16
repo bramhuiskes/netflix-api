@@ -53,15 +53,15 @@ class AuthController
         $validatedRequest = $validatorOutput->validated();
 
         if (User::where('email', $validatedRequest['email'])->exists()) {
-            return ResponseController::respond(['error' => 'email already exists']);
+            return ResponseController::respond(['error' => 'email already exists'], 409);
         }
 
         if ($validatedRequest['email'] == null) {
-            return ResponseController::respond(['error' => 'email not in header']);
+            return ResponseController::respond(['error' => 'email not in header'], 400);
         }
 
         if ($validatedRequest['password'] == null) {
-            return ResponseController::respond(['error' => 'password not in header']);
+            return ResponseController::respond(['error' => 'password not in header'], 400);
         }
 
         $user = User::create([
@@ -198,7 +198,7 @@ class AuthController
         }
 
         if (!($userOutput instanceof User)) {
-            return ResponseController::respond(['error' => 'user not found'], 422);
+            return ResponseController::respond(['error' => 'user not found'], 404);
         }
 
         if ($usingBlockStateCheck) {

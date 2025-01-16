@@ -9,8 +9,9 @@
     - `email` (string, required): The email address of the user.
     - `password` (string, required): The user's password.
 - **Response**:
-    - `200 OK`: Returns a token on successful authentication.
-    - `422 Unprocessable Entity`: Validation errors, e.g., invalid email or password.
+    - `200`: Returns a token on successful authentication.
+    - `400`: Validation errors or missing data.
+    - `404`: User not found or invalid password.
 
 **Example Request**:
 ```json
@@ -27,50 +28,47 @@
 ```
 
 ### GET `/login`
-- **Description**: Log in a user without password verification.
+- **Description**: Get the password of given user.
 - **Controller Method**: `AuthController@loginWithoutPasswordCheck`
+- **URL Parameter**:
+  - `email` (string, required): Email of user
 - **Response**:
-    - `200 OK`: User successfully logged in.
-
+  - `200`: Returns a token on successful authentication.
+  - `400`: Validation errors or missing data.
+  - `404`: User not found.
+  
+**Example URL**:
+```url
+/login?email=test@example.com
+```
 **Example Response**:
 ```json
 {
-  "message": "Login successful",
-  "user": {
-    "id": 1,
-    "email": "user@example.com"
-  }
+  "psw": "$2y$12$qlR0L3TxrZ.Omb6jZZX5luxJhJ7oVxFZSpbJ53QPP6rSrzat9T.1O"
 }
 ```
 
 ### POST `/register`
-- **Description**: Register a new user.
+- **Description**: Register a new user and log in automatically
 - **Controller Method**: `AuthController@register`
 - **Request Body**:
-    - `name` (string, required): The full name of the user.
     - `email` (string, required): The email address of the user.
     - `password` (string, required): The user's password.
 - **Response**:
-    - `201 Created`: User successfully registered.
-    - `422 Unprocessable Entity`: Validation errors.
+    - `200`: User successfully registered.
+    - `400`: Validation errors or missing data.
 
 **Example Request**:
 ```json
 {
-  "name": "John Doe",
-  "email": "john.doe@example.com",
+  "email": "user@example.com",
   "password": "securepassword"
 }
 ```
 **Example Response**:
 ```json
 {
-  "message": "User registered successfully",
-  "user": {
-    "id": 2,
-    "name": "John Doe",
-    "email": "john.doe@example.com"
-  }
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
 }
 ```
 
@@ -79,24 +77,25 @@
 - **Controller Method**: `AuthController@passwordReset`
 - **Request Body**:
     - `email` (string, required): The email address of the user.
-    - `new_password` (string, required): The new password.
-    - `confirm_password` (string, required): Confirmation of the new password.
+    - `password` (string, required): The new password.
+    - `newPassword` (string, required): Confirmation of the new password.
 - **Response**:
-    - `200 OK`: Password reset successfully.
-    - `422 Unprocessable Entity`: Validation errors.
+    - `200`: Password reset successfully.
+    - `400`: Validation errors.
+    - `404`: User not found.
 
 **Example Request**:
 ```json
 {
   "email": "user@example.com",
-  "new_password": "newpassword123",
-  "confirm_password": "newpassword123"
+  "password": "newpassword123",
+  "newPassword": "newpassword123"
 }
 ```
 **Example Response**:
 ```json
 {
-  "message": "Password reset successful"
+  "msg": "Password reset successful"
 }
 ```
 
@@ -105,19 +104,27 @@
 - **Controller Method**: `AuthController@activateAccount`
 - **Middleware**: `auth:sanctum`
 - **Response**:
-    - `200 OK`: Account activated.
-    - `401 Unauthorized`: Invalid or missing token.
+    - `200`: Account succesfully activated.
+    - `400`: Validation errors.
+    - `404`: User not found.
+
+**Header Data**:
+```json
+{
+    "Authorization": "Bearer 35|Sr5XRcouIzKsB0mL0rb9Bh0PawI6cbZTLFPRViKb89da7fb6"
+}
+```
 
 **Example Request**:
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+  "email": "user@example.com"
 }
 ```
 **Example Response**:
 ```json
 {
-  "message": "Account activated successfully"
+  "msg": "Data successfully updated"
 }
 ```
 
@@ -126,19 +133,56 @@
 - **Controller Method**: `AuthController@blockAccount`
 - **Middleware**: `auth:sanctum`
 - **Response**:
-    - `200 OK`: Account blocked.
-    - `401 Unauthorized`: Invalid or missing token.
+    - `200`: Account succesfully blocked.
+    - `400`: Validation errors.
+    - `404`: User not found
+
+**Header Data**:
+```json
+{
+    "Authorization": "Bearer 35|Sr5XRcouIzKsB0mL0rb9Bh0PawI6cbZTLFPRViKb89da7fb6"
+}
+```
 
 **Example Request**:
 ```json
 {
-  "user_id": 3
+  "email": "user@example.com"
 }
 ```
 **Example Response**:
 ```json
 {
-  "message": "Account blocked successfully"
+  "msg": "Data successfully updated"
+}
+```
+
+### POST `/block-account`
+- **Description**: Block a user account. Requires authentication.
+- **Controller Method**: `AuthController@unblockAccount`
+- **Middleware**: `auth:sanctum`
+- **Response**:
+    - `200`: Account succesfully unblocked.
+    - `400`: Validation errors.
+    - `404`: User not found
+
+**Header Data**:
+```json
+{
+    "Authorization": "Bearer 35|Sr5XRcouIzKsB0mL0rb9Bh0PawI6cbZTLFPRViKb89da7fb6"
+}
+```
+
+**Example Request**:
+```json
+{
+  "email": "user@example.com"
+}
+```
+**Example Response**:
+```json
+{
+  "msg": "Data successfully updated"
 }
 ```
 
@@ -151,36 +195,113 @@
 - **Controller Method**: `UserController@getUserDetails`
 - **Middleware**: `auth:sanctum`
 - **URL Parameter**:
-    - `user` (integer, optional): User ID.
+    - `user` (string, required): User email.
 - **Response**:
-    - `200 OK`: Returns user details.
-    - `404 Not Found`: User not found.
+    - `200`: Returns user details.
+    - `400`: Validation errors.
+    - `404`: User not found.
 
-**Example Request**:
+**Header Data**:
+```json
+{
+    "Authorization": "Bearer 35|Sr5XRcouIzKsB0mL0rb9Bh0PawI6cbZTLFPRViKb89da7fb6"
+}
 ```
-GET /user/2
-Authorization: Bearer {token}
+**Example URL**:
+```url
+/user/user@example.com
 ```
 **Example Response**:
 ```json
 {
-  "id": 2,
-  "name": "Jane Doe",
-  "email": "jane.doe@example.com"
+    "Email": "user@example.com",
+    "AccountStatus": "PendingActivation",
+    "TrialStatus": "Active",
+    "CreatedAt": "2025-01-08T09:16:00.000000Z",
+    "UpdatedAt": "2025-01-08T15:20:47.000000Z"
 }
 ```
 
 ---
 
-## Movie Routes
+## Model Routes
 
-### GET `/movies`
-- **Description**: Retrieve a list of movies. Requires authentication.
-- **Controller Method**: `MovieController@getMovies`
+All database tables, except for the basic Laravel tables including users, uses the same methods and request data. Please note, the models are named like the database table, but in singular. 
+
+### GET `/{model name}`
+- **Description**: Gets a list of rows found within the query
+- **Controller Method**: `Controller@get`
 - **Middleware**: `auth:sanctum`
+- **URL Parameters**:
+    - `id`: id of model.
+    - `/movie` & `/serie`
+      - title
+      - release_year
+      - movie_quality_id
+      - viewer_indications
+      - genres
+    - `/view_history`
+      - profile_id
+      - content_id
+      - content_type
+      - watch_date
+      - watch_duration
+      - complete_status
+    - `/watchlist`
+      - profile_id
+      - content_id
+      - content_type
+    - `/profile`
+      - user_id
+      - name
+      - profile_picture
+      - age
+      - language
+      - preference_id
+    - `/subscription`
+      - user_id
+      - subscription_type_id
+      - price
+      - billing_date
+    - `/subscription_type`
+      - name
+      - price
+    - `/referral`
+      - referrer_user_id
+      - referred_user_id
+      - discount_amount
+      - status
+    - `/preference`
+      - profile_id
+      - key
+      - value
+    - `/episode`
+      - series_id
+      - episodes_number
+      - title
+      - duration
+    - `/movie_quality`
+      - movie_id
+      - quality_type_id
+    - `/subtitle`
+      - content_id
+      - content_type
+      - language
+    - `/quality_type`
+      - name
+      - resolution
+    - `/role`
+      - name
+
 - **Response**:
-    - `200 OK`: List of movies.
-    - `401 Unauthorized`: Invalid or missing token.
+    - `200`: List of rows.
+    - `400`: Validation errors.
+    - `404`: User not found.
+
+**Example URL**:
+```url
+/movie?title=Inception&release_year=2010
+```
 
 **Example Response**:
 ```json
@@ -190,69 +311,195 @@ Authorization: Bearer {token}
     "title": "Inception",
     "description": "A mind-bending thriller",
     "release_year": 2010
-  },
-  {
-    "id": 2,
-    "title": "The Matrix",
-    "description": "A sci-fi classic",
-    "release_year": 1999
   }
 ]
 ```
 
-### POST `/movies`
-- **Description**: Add a new movie to the collection. Requires authentication.
-- **Controller Method**: `MovieController@addMovie`
+### POST `/{model name}`
+- **Description**: Post new data to the database.
+- **Controller Method**: `Controller@add`
 - **Middleware**: `auth:sanctum`
 - **Request Body**:
-    - `title` (string, required): The movie's title.
-    - `description` (string, optional): A short description of the movie.
-    - `release_year` (integer, optional): The year the movie was released.
+    - `/movie` & `/serie` (Admin rights required)
+        - title (Required)
+        - release_year (Required)
+        - movie_quality_id
+        - viewer_indications
+        - genres
+    - `/view_history`
+        - profile_id (Required)
+        - content_id (Required)
+        - content_type (Required)
+        - watch_date (Required)
+        - watch_duration (Required)
+        - complete_status (Required)
+    - `/watchlist`
+        - profile_id (Required)
+        - content_id (Required)
+        - content_type (Required)
+    - `/profile`
+        - user_id (Required)
+        - name (Required)
+        - profile_picture
+        - age (Required)
+        - language
+        - preference_id
+    - `/subscription`
+        - user_id (Required)
+        - subscription_type_id (Required)
+        - price (Required)
+        - billing_date (Required)
+    - `/subscription_type` (Admin rights required)
+        - name (Required)
+        - price (Required)
+    - `/referral` (Admin rights required)
+        - referrer_user_id (Required)
+        - referred_user_id (Required)
+        - discount_amount (Required)
+        - status (Required)
+    - `/preference`
+        - profile_id (Required)
+        - key (Required)
+        - value (Required)
+    - `/episode` (Admin rights required)
+        - series_id (Required)
+        - episodes_number (Required)
+        - title (Required)
+        - duration (Required)
+    - `/movie_quality` (Admin rights required)
+        - movie_id (Required)
+        - quality_type_id (Required)
+    - `/subtitle` (Admin rights required)
+        - content_id (Required)
+        - content_type (Required)
+        - language (Required)
+    - `/quality_type` (Admin rights required)
+        - name (Required)
+        - resolution (Required)
+    - `/role` (Admin rights required)
+        - name (Required)
+
 - **Response**:
-    - `201 Created`: Movie successfully added.
-    - `422 Unprocessable Entity`: Validation errors.
+    - `200`: Successfully added.
+    - `400`: Validation errors.
 
 **Example Request**:
 ```json
 {
   "title": "Interstellar",
-  "description": "A journey through space and time",
   "release_year": 2014
 }
 ```
 **Example Response**:
 ```json
 {
-  "message": "Movie added successfully",
-  "movie": {
-    "id": 3,
-    "title": "Interstellar",
-    "description": "A journey through space and time",
-    "release_year": 2014
-  }
+    "msg": "Successfully saved", 
+    "model": {
+        "title": "Interstellar",
+        "release_year": 2014
+    }
 }
 ```
 
-### DELETE `/movies`
-- **Description**: Delete a movie from the collection. Requires authentication.
-- **Controller Method**: `MovieController@deleteMovie`
+### DELETE `/{model name}`
+- **Description**: Delete data from the database.
+- **Controller Method**: `Controller@delete`
 - **Middleware**: `auth:sanctum`
 - **Request Body**:
-    - `movie_id` (integer, required): The ID of the movie to delete.
+    - `id`: id of model (Required)
 - **Response**:
-    - `200 OK`: Movie successfully deleted.
-    - `404 Not Found`: Movie not found.
+    - `200 `: Model successfully deleted.
+    - `400 `: Validation errors.
+    - `404`: Model not found.
 
-**Example Request**:
-```json
-{
-  "movie_id": 2
-}
+**Example URL**:
+```url
+/movie?id=1
 ```
 **Example Response**:
 ```json
 {
-  "message": "Movie deleted successfully"
+  "msg": "Succesfully deleted"
 }
 ```
+### PATCH `/{model name}`
+- **Description**: Updates a model by given ID
+- **Controller Method**: `Controller@update`
+- **Middleware**: `auth:sanctum`
+- **URL Parameters**:
+    - `id`: id of model (Required)
+    - `/movie` & `/serie` (Admin rights required)
+        - title
+        - release_year
+        - movie_quality_id
+        - viewer_indications
+        - genres
+    - `/view_history`
+        - profile_id
+        - content_id
+        - content_type
+        - watch_date
+        - watch_duration
+        - complete_status
+    - `/watchlist`
+        - profile_id
+        - content_id
+        - content_type
+    - `/profile`
+        - user_id
+        - name
+        - profile_picture
+        - age
+        - language
+        - preference_id
+    - `/subscription`
+        - user_id
+        - subscription_type_id
+        - price
+        - billing_date
+    - `/subscription_type` (Admin rights required)
+        - name
+        - price
+    - `/referral` (Admin rights required)
+        - referrer_user_id
+        - referred_user_id
+        - discount_amount
+        - status
+    - `/preference`
+        - profile_id
+        - key
+        - value
+    - `/episode` (Admin rights required)
+        - series_id
+        - episodes_number
+        - title
+        - duration
+    - `/movie_quality` (Admin rights required)
+        - movie_id
+        - quality_type_id
+    - `/subtitle` (Admin rights required)
+        - content_id
+        - content_type
+        - language
+    - `/quality_type` (Admin rights required)
+        - name
+        - resolution
+    - `/role` (Admin rights required)
+        - name
 
+- **Response**:
+    - `200`: List of rows.
+    - `400`: Validation errors.
+    - `404`: User not found.
+
+**Example URL**:
+```url
+/movie?id=1&title=Inception&release_year=2010
+```
+
+**Example Response**:
+```json
+{
+    "msg": "Data succesfully updated"
+}
+```
