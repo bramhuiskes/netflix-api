@@ -61,7 +61,14 @@ docker-compose exec app php artisan migrate
 
 ---
 
-### **Step 6: Access the Application**
+### **Step 6: Run script files**
+
+- If you use Windows, run the file in the root named `WIN_clearCacheAndServe.bat`
+- If you use MacOS or Linux, run the scripts inside the file named `MAC_LIN_clearCacheAndServe.sh`
+
+---
+
+### **Step 7: Access the Application**
 
 The application will be available at [http://localhost:8000](http://localhost:8000).
 
