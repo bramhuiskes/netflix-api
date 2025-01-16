@@ -20,6 +20,13 @@
  - **Admin Auditor** (With Privileges):
    - Username: `admin_auditor`
    - Password: `password4`
+### Database Implementation
+ - **Login with Root User**:
+   - Username: `root`
+   - Password: `root`
+ - **Delete all current tables**:
+   - Warning! Be sure that the checkbox named 'Check for external key fields' is turned off!
+ - **Importeer the file named** `netflix_def.sql`
 ---
 ## Authentication Routes
 
