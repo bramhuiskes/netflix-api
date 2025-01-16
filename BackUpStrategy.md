@@ -24,7 +24,7 @@ crontab -e
 
 De volgende regel is toegevoegd, zodat er een backup elke nacht om 02:00 wordt gemaakt:
 ```bash
-0 2 * * * /usr/bin/mariabackup --backup --target-dir=/usr/bin/backup --user=netflix_user --password=netflix_password
+0 2 * * * /usr/bin/mariabackup --backup --target-dir=/usr/bin/backup --user=root --password=root
 
 ```
 
@@ -65,3 +65,11 @@ systemctl start mariadb
 ```
 
 De database zou nu hersteld moeten zijn!
+
+---
+
+## Handmatige Backup maken
+Voer volgend commando in om een handmatige backup te maken
+```bash
+mariabackup --backup --target-dir=/usr/bin/backup --user=root --password=root
+```

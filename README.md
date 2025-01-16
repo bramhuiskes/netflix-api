@@ -1,6 +1,6 @@
 # Laravel Docker Setup Usecase Netflix, Data Processing
 
-Group: Bram Huiskes, Gideon Dijkhuis, Daniël Tukker & Yunus Karakoç
+Group: Bram Huiskes, Gideon Dijkhuis & Yunus Karakoç
 
 To share your Laravel project with the Docker setup on GitHub and ensure others can set it up easily, you need to do the following:
 

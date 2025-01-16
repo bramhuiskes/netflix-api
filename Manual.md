@@ -1,5 +1,26 @@
 # API Manual
 
+## Database
+### Database Login
+ - **Root User**:
+   - Username: `root`
+   - Password: `root`
+ - **Netflix User** (With Privileges):
+   - Username: `netflix_user`
+   - Password: `netflix_password`
+ - **Movies and Series Added** (With Privileges):
+   - Username: `movies_series_added`
+   - Password: `password1`
+ - **User manager** (With Privileges):
+   - Username: `user_manager`
+   - Password: `password2`
+ - **Viewer data analyst** (With Privileges):
+   - Username: `viewer_analyst`
+   - Password: `password3`
+ - **Admin Auditor** (With Privileges):
+   - Username: `admin_auditor`
+   - Password: `password4`
+---
 ## Authentication Routes
 
 ### POST `/login`
@@ -57,6 +78,7 @@
 - **Response**:
     - `200`: User successfully registered.
     - `400`: Validation errors or missing data.
+    - `409`: Email already exists.
 
 **Example Request**:
 ```json
