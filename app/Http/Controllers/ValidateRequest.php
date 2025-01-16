@@ -89,7 +89,7 @@ class ValidateRequest
             'content_type' => $fieldOptional ? 'nullable' : 'required',
             'watch_date' => $fieldOptional ? 'nullable' : 'required',
             'watch_duration' => $fieldOptional ? 'nullable' : 'required',
-            'complete_status' => $fieldOptional ? 'nullable' : 'required',
+            'completion_status' => $fieldOptional ? 'nullable' : 'required',
         ];
 
         return Validator::make($request->all(), $rules);
