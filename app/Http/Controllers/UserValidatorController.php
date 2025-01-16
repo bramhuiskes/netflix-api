@@ -16,7 +16,7 @@ class UserValidatorController
         $user = User::where('email', $validatedRequest['email'])->first();
 
         if (!$user) {
-            return ResponseController::respond(['error' => 'user not found'], 403);
+            return ResponseController::respond(['error' => 'user not found'], 404);
         }
 
         if ($validatedRequest['password'] == null) {
@@ -39,7 +39,7 @@ class UserValidatorController
         $user = User::where('email', $validatedRequest['email'])->first();
 
         if (!$user) {
-            return ResponseController::respond(['error' => 'user not found'], 403);
+            return ResponseController::respond(['error' => 'user not found'], 404);
         }
 
         return $user;

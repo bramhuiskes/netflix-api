@@ -114,7 +114,7 @@ class ModelController
     {
         if ($isAdminRightsRequired && (!$user->exists() || $user->role_id != 1))
         {
-            return ResponseController::respond(['error' => "Unauthorized"], 401);
+            return ResponseController::respond(['error' => "Unauthorized"], 403);
         }
 
         return null;

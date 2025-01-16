@@ -107,7 +107,7 @@ class AuthController
 
         if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
         {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
+            return ResponseController::respond(['error' => 'invalid token'], 401);
         }
 
         return ModelController::patch($request->user(), ['is_active' => 1, 'account_status' => 'Active', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table, false);
@@ -127,7 +127,7 @@ class AuthController
 
         if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
         {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
+            return ResponseController::respond(['error' => 'invalid token'], 401);
         }
 
         return ModelController::patch($request->user(), ['is_blocked' => 1, 'account_status' => 'Blocked', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table, false);
@@ -147,7 +147,7 @@ class AuthController
 
         if (!ValidateRequest::isTokenForUser($request, $checkUserOutput))
         {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
+            return ResponseController::respond(['error' => 'invalid token'], 401);
         }
 
         return ModelController::patch($request->user(), ['is_blocked' => 0, 'account_status' => 'Active', 'id' => $checkUserOutput->id], $checkUserOutput, self::$table);

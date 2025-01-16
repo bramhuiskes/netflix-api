@@ -18,12 +18,12 @@ class UserController
 
         if (!($user instanceof User))
         {
-            return ResponseController::respond(['error' => 'user not found'], 422);
+            return ResponseController::respond(['error' => 'user not found'], 404);
         }
 
         if (!ValidateRequest::isTokenForUser($request, $user))
         {
-            return ResponseController::respond(['error' => 'invalid token'], 403);
+            return ResponseController::respond(['error' => 'invalid token'], 401);
         }
 
 
