@@ -20,6 +20,16 @@
  - **Admin Auditor** (With Privileges):
    - Username: `admin_auditor`
    - Password: `password4`
+ - **Junior** (With Privileges):
+   - Username: `junior`
+   - Password: `password5`
+ - **Medium** (With Privileges):
+   - Username: `medium`
+   - Password: `password6`
+ - **Senior** (With Privileges):
+   - Username: `senior`
+   - Password: `password7`
+ 
 ### Database Implementation
  - **Login with Root User**:
    - Username: `root`
@@ -27,30 +37,40 @@
  - **Delete all current tables**:
    - Warning! Be sure that the checkbox named 'Check for external key fields' is turned off!
  - **Importeer the file named** `netflix_def.sql`
-### Isolation Levels
-The following use cases have been added for isolation levels:
-- SERIALIZABLE for routes where data integrity is crucial, such as adding movies or users.
-```sql
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-```
-- REPEATABLE READ to retrieve user or movie information so that your data remains consistent throughout a transaction.
-```sql
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-```
-- READ COMMITTED for routes where performance is more important than perfectly consistent reads, such as retrieving all the movies.
-```sql
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-```
 ---
-## Postman Basic Routes and Tests
-We added some basic routes (like user routes and some model routes), and some has test methods, end to end and regression testing. The following routes has test methods:
-- `POST` /login (regression)
-- `GET` /login (regression)
-- `POST` /register (end to end)
-- `GET` /movie (regression)
-- `POST` /movie (regression)
 
-To import the routes and tests to Postman, download the file named 'API.postman_collection.json' and import it in Postman.
+## Isolation Levels 
+
+### **1. `AddUser` Procedure: Isolation Level - `SERIALIZABLE`**
+**Reasoning:**
+- The `AddUser` procedure involves checking if an email already exists in the `users` table before inserting a new record. This requires the highest level of isolation to prevent **phantom reads** or concurrent transactions adding a user with the same email after the check but before the insert.
+- The `SERIALIZABLE` isolation level ensures that no other transactions can insert or modify rows in the `users` table that would affect the result of the `EXISTS` check. This guarantees that if the procedure determines an email does not exist, no other transaction can insert it until the current transaction is complete.
+
+**Effect:**
+- Prevents race conditions where two transactions might simultaneously check and insert the same email.
+- Ensures data integrity at the cost of reduced concurrency, which is acceptable in this scenario as adding a user is typically not a high-frequency operation.
+
+---
+
+### **2. `AddMovie` Procedure: Isolation Level - `REPEATABLE READ`**
+**Reasoning:**
+- The `AddMovie` procedure also performs a check (whether a movie with the same title and release year already exists) before inserting a new record. However, in this case, the `REPEATABLE READ` isolation level is sufficient.
+- This level prevents **non-repeatable reads**, ensuring that if the procedure reads the `movies` table to check for duplicates, the result of that read cannot change for the duration of the transaction.
+- Unlike `SERIALIZABLE`, `REPEATABLE READ` allows other transactions to insert new rows as long as they do not match the criteria being checked by the current transaction (e.g., same title and release year). This provides a balance between consistency and concurrency.
+
+**Effect:**
+- Ensures that the procedure sees a consistent snapshot of the `movies` table for the duration of its transaction, avoiding the risk of inserting duplicate movies.
+- Offers better concurrency compared to `SERIALIZABLE`, which is suitable for scenarios where movie additions are more frequent than user registrations.
+
+---
+
+### Comparison of Isolation Levels:
+| Isolation Level   | Description                                                                                           | Applied To  |
+|-------------------|-------------------------------------------------------------------------------------------------------|-------------|
+| **SERIALIZABLE**  | Ensures that no other transactions can read or modify the data being checked or written during the transaction. Prevents phantom reads. | `AddUser`   |
+| **REPEATABLE READ** | Ensures that the data read during the transaction cannot change, but new rows that don't affect the current read can still be added. | `AddMovie`  |
+
+---
 
 ## Authentication Routes
 
