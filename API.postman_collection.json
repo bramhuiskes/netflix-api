@@ -1,0 +1,940 @@
+{
+	"info": {
+		"_postman_id": "ccd0f83d-9fa1-4b6e-ad1f-ffd991468f16",
+		"name": "API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40147177"
+	},
+	"item": [
+		{
+			"name": "http://127.0.0.1:8000/api/user/test5@test.nl",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 54|yOriyNI3DJtT3FbeSj3jlHXPthDkvXKu8pRE4VYN64d37e47",
+						"type": "text"
+					},
+					{
+						"key": "password",
+						"value": "abc",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test5@test.nl",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "abcdefg",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "newPassword",
+							"value": "abcdef",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/user/test11@test.nl",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"user",
+						"test11@test.nl"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.nl",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to be JSON\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to have token\", function () {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody).to.have.property('token');\r",
+							"    pm.expect(responseBody.token).to.not.be.null;\r",
+							"    pm.expect(responseBody.token).to.not.be.undefined;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Regression Test: Validate Existing Login\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.have.property('token');",
+							"    pm.expect(responseBody.token).to.not.be.null;",
+							"",
+							"    pm.test(\"Validate token properties\", function () {",
+							"        pm.expect(responseBody.token).to.be.a('string');",
+							"        pm.expect(responseBody.token.length).to.be.above(10);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 23|202qiA7aaXkJfLBW5TvYs5TDBcgcZkCoKBMwzqDIe9f19b7d",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.nl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "abcd",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to be JSON\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to have token\", function () {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody).to.have.property(\"psw\");\r",
+							"    pm.expect(responseBody.psw).to.not.be.null;\r",
+							"    pm.expect(responseBody.psw).to.not.be.undefined;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Regression Test: Validate Existing Login\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.have.property('token');",
+							"    pm.expect(responseBody.token).to.not.be.null;",
+							"",
+							"    pm.test(\"Validate token properties\", function () {",
+							"        pm.expect(responseBody.token).to.be.a('string');",
+							"        pm.expect(responseBody.token.length).to.be.above(10);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 23|202qiA7aaXkJfLBW5TvYs5TDBcgcZkCoKBMwzqDIe9f19b7d",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test4@test.nl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "abcd",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "abcd",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/login?email=test@test.nl",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@test.nl"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/password-reset",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.nl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "test1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/password-reset",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"password-reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"E2E Test: User Registration and Login\", function () {",
+							"    pm.response.to.have.status(200);",
+							"",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.have.property('token');",
+							"    pm.expect(responseBody.token).to.not.be.null;",
+							"",
+							"    const nextRequest = {",
+							"        url: \"http://127.0.0.1:8000/api/login?email=test11@test.nl\",",
+							"        method: \"GET\",",
+							"    };",
+							"",
+							"    pm.sendRequest(nextRequest, function (err, res) {",
+							"        pm.test(\"User Details Fetch Test\", function () {",
+							"            pm.expect(res).to.have.property('status', 'OK');",
+							"            // const userDetails = res.json();",
+							"            // pm.expect(userDetails).to.have.property('Email', 'test11@test.nl');",
+							"        });",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test11@test.nl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "test11",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/register",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/activate-account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.nl",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/activate-account",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activate-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/block-account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "test@test.nl",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/activate-account",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"activate-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/movies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to be JSON\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to contain title\", function () {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseBody[0]).to.have.property('title');\r",
+							"    pm.expect(responseBody[0]).to.have.property('release_year');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 51|ewM8mmGfot6p9LBI4SXy06tUmGBd9vf5MIMssvfI352d83a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/movie?title=FNAF",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"movie"
+					],
+					"query": [
+						{
+							"key": "movie_id",
+							"value": "5",
+							"disabled": true
+						},
+						{
+							"key": "title",
+							"value": "FNAF"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/movies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to be JSON\", function () {\r",
+							"     pm.response.to.be.ok;\r",
+							"     pm.response.to.be.withBody;\r",
+							"     pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has to have token\", function () {\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody).to.have.property('msg');\r",
+							"    pm.expect(responseBody.msg).to.not.be.null;\r",
+							"    pm.expect(responseBody.msg).to.not.be.undefined;\r",
+							"\r",
+							"    pm.expect(responseBody).to.have.property('model');\r",
+							"    pm.expect(responseBody.model).to.not.be.null;\r",
+							"    pm.expect(responseBody.model).to.not.be.undefined;\r",
+							"    pm.expect(responseBody.model).to.have.property('title');\r",
+							"    pm.expect(responseBody.model).to.have.property('release_year');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 52|BJgkJbaqkeIDFfqT9O95dA3HQe1aKZRcYvZWpEsjddffdecc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Five Nights At Freddy's",
+							"type": "text"
+						},
+						{
+							"key": "release_year",
+							"value": "2030",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/movie",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"movie"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/movies",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/movies?id=15",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "15"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/watchlist",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profile_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "content_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "content_type",
+							"value": "Movies",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/watchlist",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"watchlist"
+					],
+					"query": [
+						{
+							"key": "movie_id",
+							"value": "5",
+							"disabled": true
+						},
+						{
+							"key": "title",
+							"value": "FNAF2",
+							"disabled": true
+						},
+						{
+							"key": "release_year",
+							"value": "2025",
+							"disabled": true
+						},
+						{
+							"key": "quality_available",
+							"value": "UHD",
+							"disabled": true
+						},
+						{
+							"key": "viewer_indications",
+							"value": "16+",
+							"disabled": true
+						},
+						{
+							"key": "genres",
+							"value": "Horror",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/view_history",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 43|aR17U726AD3vGj7l0xJ0mXSYsW25bUF87GDlrtAsedd46902",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/watchlist",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"watchlist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "15",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "18",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/profile",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:8000/api/view_history",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer 43|Irdd3KR9uboXAdYvW1HBf3gdYXD9KGBGRqblrtpg55df6512",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profile_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "content_id",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "content_type",
+							"value": "Movie",
+							"type": "text"
+						},
+						{
+							"key": "watch_date",
+							"value": "2025-01-17",
+							"type": "text"
+						},
+						{
+							"key": "watch_duration",
+							"value": "40",
+							"type": "text"
+						},
+						{
+							"key": "completion_status",
+							"value": "Completed",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/view_history",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"view_history"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

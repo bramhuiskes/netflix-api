@@ -33,7 +33,7 @@ The following use cases have been added for isolation levels:
 ```sql
 SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 ```
-- REPEATABLE READ t`o retrieve user or movie information so that your data remains consistent throughout a transaction.
+- REPEATABLE READ to retrieve user or movie information so that your data remains consistent throughout a transaction.
 ```sql
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 ```
@@ -42,6 +42,16 @@ SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
 ```
 ---
+## Postman Basic Routes and Tests
+We added some basic routes (like user routes and some model routes), and some has test methods, end to end and regression testing. The following routes has test methods:
+- `POST` /login (regression)
+- `GET` /login (regression)
+- `POST` /register (end to end)
+- `GET` /movie (regression)
+- `POST` /movie (regression)
+
+To import the routes and tests to Postman, download the file named 'API.postman_collection.json' and import it in Postman.
+
 ## Authentication Routes
 
 ### POST `/login`
