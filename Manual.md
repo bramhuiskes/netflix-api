@@ -37,7 +37,9 @@
  - **Delete all current tables**:
    - Warning! Be sure that the checkbox named 'Check for external key fields' is turned off!
  - **Importeer the file named** `netflix_def.sql`
+
 ---
+
 ## Postman Basic Routes and Tests
 We added some basic routes (like user routes and some model routes), and some has test methods, end to end and regression testing. The following routes has test methods:
 - `POST` /login (regression)
@@ -45,8 +47,8 @@ We added some basic routes (like user routes and some model routes), and some ha
 - `POST` /register (end to end)
 - `GET` /movie (regression)
 - `POST` /movie (regression)
-
 To import the routes and tests to Postman, download the file named 'API.postman_collection.json' and import it in Postman.
+
 ---
 
 ## Isolation Levels 
