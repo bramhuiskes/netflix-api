@@ -878,6 +878,36 @@ CREATE USER 'admin_auditor'@'%' IDENTIFIED BY 'password4';
 GRANT SELECT ON netflix.* TO 'admin_auditor'@'%';
 FLUSH PRIVILEGES;
 
+-- 5. Junior User
+DROP USER IF EXISTS 'junior'@'%';
+CREATE USER 'junior'@'%' IDENTIFIED BY 'password5';
+GRANT SELECT ON netflix.movies TO 'junior'@'%';
+GRANT SELECT ON netflix.series TO 'junior'@'%';
+GRANT SELECT ON netflix.users TO 'junior'@'%';
+FLUSH PRIVILEGES;
+
+-- 6. Medium User
+DROP USER IF EXISTS 'medium'@'%';
+CREATE USER 'medium'@'%' IDENTIFIED BY 'password6';
+GRANT SELECT, INSERT ON netflix.movies TO 'medium'@'%';
+GRANT SELECT, INSERT ON netflix.series TO 'medium'@'%';
+GRANT SELECT, INSERT ON netflix.users TO 'medium'@'%';
+GRANT SELECT, INSERT ON netflix.profiles TO 'medium'@'%';
+GRANT SELECT, INSERT ON netflix.preferences TO 'medium'@'%';
+FLUSH PRIVILEGES;
+
+-- 7. Senior User
+DROP USER IF EXISTS 'senior'@'%';
+CREATE USER 'senior'@'%' IDENTIFIED BY 'password7';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.movies TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.series TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.users TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.profiles TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.preferences TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.view_histories TO 'senior'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON netflix.watchlists TO 'senior'@'%';
+FLUSH PRIVILEGES;
+
 DELIMITER //
 
 CREATE PROCEDURE AddUser(

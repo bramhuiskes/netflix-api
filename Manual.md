@@ -20,6 +20,16 @@
  - **Admin Auditor** (With Privileges):
    - Username: `admin_auditor`
    - Password: `password4`
+ - **Junior** (With Privileges):
+   - Username: `junior`
+   - Password: `password5`
+ - **Medium** (With Privileges):
+   - Username: `medium`
+   - Password: `password6`
+ - **Senior** (With Privileges):
+   - Username: `senior`
+   - Password: `password7`
+ 
 ### Database Implementation
  - **Login with Root User**:
    - Username: `root`
