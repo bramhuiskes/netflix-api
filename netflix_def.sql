@@ -888,43 +888,49 @@ CREATE PROCEDURE AddUser(
     IN user_referral_code VARCHAR(50)
 )
 BEGIN
-    -- Controleer of het e-mailadres al bestaat
-    IF EXISTS (SELECT 1 FROM users WHERE email = user_email) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Email already exists';
-    ELSE
-        -- Voeg de nieuwe gebruiker toe
-        INSERT INTO users (
-            name, 
-            email, 
-            password, 
-            is_active, 
-            is_blocked, 
-            created_at, 
-            updated_at, 
-            account_status, 
-            trial_status, 
-            referral_code, 
-            role_id
-        )
-        VALUES (
-            user_name, 
-            user_email, 
-            user_password, 
-            TRUE,                    -- Standaard actieve status
-            FALSE,                   -- Niet geblokkeerd
-            NOW(),                   -- Huidige tijd voor created_at
-            NOW(),                   -- Huidige tijd voor updated_at
-            'PendingActivation',     -- Standaard accountstatus
-            'Active',                -- Standaard proefstatus
-            user_referral_code,      -- Referral code
-            user_role_id             -- Rol-ID
-        );
-    END IF;
+    -- Set the desired isolation level for this procedure
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+START TRANSACTION;
+BEGIN
+        -- Check if the email already exists
+        IF EXISTS (SELECT 1 FROM users WHERE email = user_email) THEN
+            ROLLBACK;
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Email already exists';
+ELSE
+            -- Add the new user
+            INSERT INTO users (
+                name,
+                email,
+                password,
+                is_active,
+                is_blocked,
+                created_at,
+                updated_at,
+                account_status,
+                trial_status,
+                referral_code,
+                role_id
+            )
+            VALUES (
+                user_name,
+                user_email,
+                user_password,
+                TRUE,
+                FALSE,
+                NOW(),
+                NOW(),
+                'PendingActivation',
+                'Active',
+                user_referral_code,
+                user_role_id
+            );
+END IF;
+END;
+COMMIT;
 END;
 //
-
-DELIMITER ;
 
 DELIMITER //
 
@@ -936,31 +942,40 @@ CREATE PROCEDURE AddMovie(
     IN movie_quality_id INT
 )
 BEGIN
-    -- Controleer of de film al bestaat
-    IF EXISTS (SELECT 1 FROM movies WHERE title = movie_title AND release_year = movie_release_year) THEN
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Movie already exists';
-    ELSE
-        -- Voeg de nieuwe film toe
-        INSERT INTO movies (title, genres, release_year, viewer_indications, movie_quality_id, created_at, updated_at)
-        VALUES (
-            movie_title, 
-            movie_genres, 
-            movie_release_year, 
-            movie_viewer_indications, 
-            movie_quality_id, 
-            NOW(), 
-            NOW()
-        );
-    END IF;
+    -- Set the desired isolation level for this procedure
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+START TRANSACTION;
+BEGIN
+        -- Check if the movie already exists
+        IF EXISTS (SELECT 1 FROM movies WHERE title = movie_title AND release_year = movie_release_year) THEN
+            ROLLBACK;
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Movie already exists';
+ELSE
+            -- Add the new movie
+            INSERT INTO movies (
+                title,
+                genres,
+                release_year,
+                viewer_indications,
+                movie_quality_id,
+                created_at,
+                updated_at
+            )
+            VALUES (
+                movie_title,
+                movie_genres,
+                movie_release_year,
+                movie_viewer_indications,
+                movie_quality_id,
+                NOW(),
+                NOW()
+            );
+END IF;
+END;
+COMMIT;
 END;
 //
 
 DELIMITER ;
-
-
-SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
-SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
